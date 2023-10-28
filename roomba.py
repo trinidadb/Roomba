@@ -1,33 +1,44 @@
-def setConnection(port="COM5"):
-    bot = Create2(port)
+from pycreate2 import Create2
 
-    bot.start()
-    bot.full()
+class Roomba():
+    BOT = None
+    VELOCITY = 300
 
-    return bot
+    def __init__(self, port="COM5"):
+        if Roomba.BOT==None:
+            Roomba.BOT = self._setConnection(port)
 
-class Roomba:
-    def __init__(self):
-        self.is_driving = False
-        self.is_rotating = False
-        self.is_stopped = True
+    @staticmethod
+    def _setConnection(port):
+        bot = Create2(port)
 
-    def drive_forward(self):
-        if not self.is_driving:
-            print("Driving forward")
-            # Implement the code to drive the robot forward here
-            self.is_driving = True
+        bot.start()
+        bot.full()
 
-    def rotate(self):
-        if not self.is_rotating:
-            print("Rotating")
-            # Implement the code to rotate the robot here
-            self.is_rotating = True
+        return bot
+
+class RoombaMovements(Roomba):
+
+    def __init__(self, bot):
+        if RoombaMovements.BOT==None:
+            RoombaMovements.BOT = bot
+
+    def reverse(self):
+        #NO SENSE FOR 0.2
+        RoombaMovements.BOT.drive_direct(RoombaMovements.VELOCITY*(-1),RoombaMovements.VELOCITY)
+        time.sleep(0.2)
+        RoombaMovements.BOT.drive_stop()
 
     def stop(self):
-        if not self.is_stopped:
-            print("Stopping")
-            # Implement the code to stop the robot here
-            self.is_driving = False
-            self.is_rotating = False
-            self.is_stopped = True
+        RoombaMovements.BOT.drive_stop()
+
+    def rotate(self, direction="right"):
+        dir_right = -1 if direction=="right" else 1
+        dir_left = dir_right * (-1)
+        RoombaMovements.BOT.drive_direct(dir_right*RoombaMovements.VELOCITY,dir_left*RoombaMovements.VELOCITY)
+        time.sleep(0.5)
+        RoombaMovements.BOT.drive_stop()
+
+    def forward(self):
+        RoombaMovements.BOT.drive_direct(RoombaMovements.VELOCITY,RoombaMovements.VELOCITY)
+

@@ -1,11 +1,13 @@
 import keyboard
 from interruption import interrupt_seconds
 from roomba import setConnection
+from sensorData import Actuate, Roomba
 
 @interrupt_seconds(0.05)
 def getSensorData(bot):
-    #data = bot.get_sensors()
-    pass
+    data = bot.get_sensors()
+    Actuate(bot, data).response()
+
 
 def main():
 
@@ -16,9 +18,12 @@ def main():
         routine_running = False
     keyboard.add_hotkey('q', stop_routine)
 
-    bot = setConnection("COM5")
+    #Set connection
+    bot = Roomba(port="COM7").BOT
 
     while routine_running:
         getSensorData(bot)
+
+    bot.close()
 
 main()
