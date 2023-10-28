@@ -1,4 +1,5 @@
 import time
+from roomba import RoombaMovements
 
 class Actuate():
 
