@@ -39,10 +39,8 @@ class RoombaMovements(Roomba):
         dir_right = -1 if direction=="right" else 1
         dir_left = dir_right * (-1)
 
-        time_to_spin = (abs(angle) / (360*RoombaMovements.SPEED/ (2*math.pi*RoombaMovements.WHEEL_DIAMETER/2)))
-
         RoombaMovements.BOT.drive_direct(dir_right*RoombaMovements.SPEED,dir_left*RoombaMovements.SPEED)
-        time.sleep(time_to_spin)
+        time.sleep(0.5)
         RoombaMovements.BOT.drive_stop()
 
     def forward(self):
