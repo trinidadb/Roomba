@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 MAX_COUNT_ENCODER = 65536
 COUNTS_IN_REVOLUTION = 508.8
@@ -12,42 +13,43 @@ class Locate():
         self.xPos = 0
         self.yPos = 0
         self.thetaRad = 0
-        self.dist = 0
-        self.leftEnc_old = 0
-        self.rightEnc_old = 0
-        self.firstRun = True
+        self.leftEnc_old = None
+        self.rightEnc_old = None
 
     def updatePosition(self, data):
         leftEnc = data.encoder_counts_left
         rightEnc = data.encoder_counts_right
 
-        if self.firstRun:
+        if not (self.leftEnc_old or self.rightEnc_old):
             self.leftEnc_old, self.rightEnc_old = leftEnc, rightEnc
-            self.firstRun = False
             return
         
         deltaLeft = self._getEncoderCountDelta(leftEnc, self.leftEnc_old)
-        deltaRight = self._getEncoderCountDelta(rightEnc, self.rightEnc_oldEnc_old)
+        deltaRight = self._getEncoderCountDelta(rightEnc, self.rightEnc_old)
 
         distLeft = self._getDistanceFromCounts(deltaLeft) ##mm
         distRight = self._getDistanceFromCounts(deltaRight) ##mm
 
         avgDistance = (distLeft + distRight)/2
+
+        avgDistance = avgDistance if abs(avgDistance)>0.5 else 0
+
         deltaThetaRad = (distRight-distLeft)/WHEEL_DISTANCE
-    
-        # deltaThetaRad *= ANGULAR_ERROR
+        #deltaThetaRad *= 0.0104*math.pi
+
         self.thetaRad += deltaThetaRad
+        self.thetaRad = self.thetaRad if abs(self.thetaRad)>0.5 else 0
         
         if self.thetaRad > 2*math.pi:
             self.thetaRad -= 2*math.pi
         elif self.thetaRad < -2*math.pi:
-            self.thetaRad += 2*math.pi
+            self.thetaRad += 2*math.pi         
 
         self.xPos += avgDistance * math.cos(self.thetaRad)
         self.yPos += avgDistance * math.sin(self.thetaRad)
 
-        self.leftEncoder_old = leftEnc
-        self.rightEncoder_old = rightEnc        
+        self.leftEnc_old = leftEnc
+        self.rightEnc_old = rightEnc        
 
 
     def _getEncoderCountDelta(self, newCount, oldCount):
@@ -60,4 +62,4 @@ class Locate():
         return delta
 
     def _getDistanceFromCounts(self, counts):
-        return counts * math.pi * WHEEL_DIAMETER * COUNTS_IN_REVOLUTION     
+        return counts * math.pi * WHEEL_DIAMETER / COUNTS_IN_REVOLUTION     
