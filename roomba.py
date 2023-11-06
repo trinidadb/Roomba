@@ -41,10 +41,10 @@ class RoombaMovements(Roomba):
         dir_left = dir_right * (-1)
 
         RoombaMovements.BOT.drive_direct(dir_right*RoombaMovements.SPEED,dir_left*RoombaMovements.SPEED)
-        time.sleep(0.35)
+        time.sleep(0.47)
         RoombaMovements.BOT.drive_stop()
 
-    def rotateAngleDegrees(angle=90):
+    def rotateAngleDegrees(self, angle=-45):
         ''' To rotate 360° the encoder counts should be around 1578 +/-10'''
         if RoombaMovements.SPEED>210:
             print("For this speed the function is disabled. The error when setting the angle is too big")

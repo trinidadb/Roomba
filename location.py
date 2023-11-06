@@ -31,15 +31,16 @@ class Locate():
         distRight = self._getDistanceFromCounts(deltaRight) ##mm
 
         avgDistance = (distLeft + distRight)/2
-
-        avgDistance = avgDistance if abs(avgDistance)>0.5 else 0
+        avgDistance = avgDistance if abs(avgDistance)>2 else 0
+        factorDeCorreccionDist = 0.6/0.53 #Se lo encontro experimentalmente
+        avgDistance *= factorDeCorreccionDist
 
         deltaThetaRad = (distRight-distLeft)/WHEEL_DISTANCE
-        #deltaThetaRad *= 0.0104*math.pi
+        factorDeCorreccionAngular = 360/329 #364/320 #Se lo encontro experimentalmente
+        self.thetaRad += (deltaThetaRad* factorDeCorreccionAngular)
 
-        self.thetaRad += deltaThetaRad
-        self.thetaRad = self.thetaRad if abs(self.thetaRad)>0.5 else 0
-        
+        self.thetaRad = self.thetaRad if abs(self.thetaRad)>0.7 else 0
+
         if self.thetaRad > 2*math.pi:
             self.thetaRad -= 2*math.pi
         elif self.thetaRad < -2*math.pi:
@@ -50,7 +51,6 @@ class Locate():
 
         self.leftEnc_old = leftEnc
         self.rightEnc_old = rightEnc        
-
 
     def _getEncoderCountDelta(self, newCount, oldCount):
         delta = newCount-oldCount

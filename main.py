@@ -2,7 +2,7 @@ import keyboard
 from roomba import Roomba
 from actionCoordination import Actuate
 from location import Locate
-from graphics import PlotHistory
+from graphics import Plot, plt
 import time
 
 
@@ -11,7 +11,8 @@ def getSensorData(bot, locationObj, plotHist=True):
     sampleTime = time.time()
     Actuate(bot, data).response()
     locationObj.updatePosition(data)
-    PlotHistory().addValuesToPlot(sampleTime, [locationObj.xPos, locationObj.yPos, locationObj.thetaRad])
+    Plot().addValuesToPlot(sampleTime, locationObj.xPos, locationObj.yPos, locationObj.thetaRad)
+    Plot().plotRealTime()
 
 
 def main(plotHist=True):
@@ -33,8 +34,11 @@ def main(plotHist=True):
     bot.drive_stop()
     bot.close()
 
+    plt.ioff()
+    plt.show()
+
     if plotHist:
-        PlotHistory().plot()
+        Plot().plotHistoric()
 
 main()
 
