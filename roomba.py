@@ -10,20 +10,26 @@ class Roomba():
         if Roomba.BOT==None:
             Roomba.BOT = self._setConnection(port)
 
-    @staticmethod
-    def _setConnection(port):
+    def _setConnection(self, port):
         bot = Create2(port)
 
         bot.start()
         bot.full()
 
         return bot
+    
+    def playSong(self):
+        songNum = 0
+        song = [76, 12, 76, 12, 20, 12, 76, 12, 20, 12, 72, 12, 76, 12, 20, 12, 79, 12, 20, 36, 67, 12, 20, 36]
+        Roomba.BOT.createSong(songNum, song)
+        time.sleep(0.1)
+        how_long = Roomba.BOT.playSong(songNum)
+        time.sleep(how_long)
 
 class RoombaMovements(Roomba):
 
     def __init__(self, bot):
-        if RoombaMovements.BOT==None:
-            RoombaMovements.BOT = bot
+        RoombaMovements.BOT = bot
 
     def forward(self):
         RoombaMovements.BOT.drive_direct(RoombaMovements.SPEED,RoombaMovements.SPEED)
@@ -43,20 +49,3 @@ class RoombaMovements(Roomba):
         RoombaMovements.BOT.drive_direct(dir_right*RoombaMovements.SPEED,dir_left*RoombaMovements.SPEED)
         time.sleep(0.47)
         RoombaMovements.BOT.drive_stop()
-
-    def rotateAngleDegrees(self, angle=-45):
-        ''' To rotate 360° the encoder counts should be around 1578 +/-10'''
-        if RoombaMovements.SPEED>210:
-            print("For this speed the function is disabled. The error when setting the angle is too big")
-            RoombaMovements.BOT.drive_stop()
-            return
-        
-        cmd = (RoombaMovements.SPEED, -RoombaMovements.SPEED) if angle > 0 else (-RoombaMovements.SPEED, RoombaMovements.SPEED)
-        turn_angle = 0
-        while abs(turn_angle) < abs(angle):
-            RoombaMovements.BOT.drive_direct(*cmd)
-            data = RoombaMovements.BOT.get_sensors()
-            turn_angle += data.angle  # roomba only tracks the delta angle
-
-        RoombaMovements.BOT.drive_stop()   
-

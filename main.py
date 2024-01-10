@@ -25,14 +25,15 @@ def main(plotHist=True):
     keyboard.add_hotkey('q', stop_routine)
 
     #Set connection
-    bot = Roomba(port="COM7").BOT
+    roomba = Roomba(port="COM4")
     locationObj = Locate()
 
     while routine_running:
-        getSensorData(bot, locationObj, plotHist=plotHist)
+        getSensorData(roomba.BOT, locationObj, plotHist=plotHist)
 
-    bot.drive_stop()
-    bot.close()
+    roomba.BOT.drive_stop()
+    roomba.playSong()
+    roomba.BOT.close()
 
     plt.ioff()
     plt.show()

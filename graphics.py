@@ -26,7 +26,6 @@ class Plot:
         Y_POS.append(y_mm)
         THETA_RAD.append(theta_rad)
 
-
     @staticmethod    
     def plotHistoric():
         figure, (ax1, ax2) = plt.subplots(1,2) 
@@ -64,34 +63,3 @@ class Plot:
         ax2.set_title('Roomba Angle')   
 
         plt.pause(0.01)
-
-
-
-    # @staticmethod
-    # def plotAngleInPolarSystem():
-    #     fig = plt.figure(figsize=(6, 6))
-    #     ax = fig.add_subplot(111, polar=True)
-    #     ax.plot(THETA_RAD[-1], 1, 'ro') 
-    #     ax.set_theta_zero_location("N") # Set the direction of 0 degrees to the top (North)
-    #     ax.set_theta_direction(-1) # Set the direction of positive angles (counterclockwise)
-    #     ax.yaxis.grid(True)
-    #     ax.set_title('Angle')
-    #     plt.show()
-
-    #@staticmethod    
-    # def plotHistoric():
-    #     # Initialise the subplot function using number of rows and columns 
-    #     figure, axis = plt.subplots(1, 3) 
-        
-    #     time, x_position_m, y_position_m, theta_deg = _preProcess(TIME, X_POS, Y_POS, THETA_RAD)
-
-    #     axis[0].plot(time, x_position_m)
-    #     axis[1].plot(time, y_position_m)
-    #     axis[2].plot(time, theta_deg)
-
-    #     axis[0].set_title("X Postion (m)") 
-    #     axis[1].set_title("Y Postion (m)")
-    #     axis[2].set_title("Theta (deg)")   
-        
-    #     # Combine all the operations and display 
-    #     plt.show()
