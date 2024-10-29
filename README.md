@@ -1,3 +1,2 @@
 # Roomba
-Project made as part of the Smart Systems Master
-Subject: Autonomous Robots
+Simple project to randomly move and position a Roomba in space
